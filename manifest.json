@@ -1,0 +1,21 @@
+{
+  "name": "FBTimer",
+  "version": "0.1.1",
+  "description": "Shows how long you have been on Facebook",
+  "manifest_version": 2,
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [{
+      "matches": ["*://www.facebook.com/*"],
+      "css": ["basic.css"],
+      "js": ["jquery.min.js", "contentscript.js"]
+    }],
+    "web_accessible_resources": [
+      "jquery.min.js",
+      "contentscript.js"
+    ],
+    "permissions" : [
+      "tabs"
+    ]
+}
