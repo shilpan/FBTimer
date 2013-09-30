@@ -1,4 +1,4 @@
-FBTime
+FBTimer
 ================================
 A chrome extension which lets you know the amount of time you spend on Facebook as you browse through Facebook!
 
@@ -12,9 +12,9 @@ How do I install this?
 * Select the FBTimer folder
 * Start Facebook!
 
-How do I install this?
+Who is this for?
 -------------------------
-For people who simply like to know how much time they spend on Facebook.
+For people who simply like to know how much time they spend on Facebook at a stretch.
 
 Is it ready to be exported as a plugin?
 -------------------------------
