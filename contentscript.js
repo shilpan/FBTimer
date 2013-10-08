@@ -1,5 +1,6 @@
 $(document).ready(function() {
   var totalTime = 0;
+  var showTimer = false;
 
   var updateClock = function(millisecs ) {
     var currentHours = Math.floor(millisecs/(60 * 60 * 1000));
@@ -15,8 +16,13 @@ $(document).ready(function() {
   }
 
   var addTimer = function () {
-    if (document.getElementById('contentArea').firstChild.id != "my_div")
-      $('#contentArea').prepend('<div id="my_div"><p id="my_time"><p></div>');
+    var fbDiv = document.getElementById('contentArea');
+
+    if(!fbDiv)
+      fbDiv = document.getElementById('content');
+
+    if (fbDiv.firstChild.id != "my_div" && showTimer)
+      $(fbDiv).prepend('<div id="my_div"><p id="my_time"><p></div>');
   }
 
   window.addEventListener('click', function(event) {
@@ -27,11 +33,18 @@ $(document).ready(function() {
     setTimeout(addTimer, 1000);
   }, false);
 
+  console.log(showTimer);
   chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    totalTime = request.totalTime;
+    if('totalTime' in request)
+      totalTime = request.totalTime;
+
+    if('showTimer' in request)
+      showTimer = request.showTimer;
   });
 
-  chrome.runtime.sendMessage({sendData: "time"}, function(response) {
+  var link = document.getElementById('pageNav').getElementsByClassName('navLink')[0].href;
+  var personID = link.substring(link.lastIndexOf('/') + 1, link.indexOf('?') != -1 ? link.indexOf('?') : link.length -1);
+  chrome.runtime.sendMessage({sendData: "time", personID: personID, showTimer: true}, function(response) {
     totalTime = response.totalTime;
 
     addTimer();

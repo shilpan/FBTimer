@@ -1,27 +1,47 @@
 (function (window, undefined) {
-  var usingFB = false, totalTime = 0, startTime;
+  var usingFB = false, totalTime = 0, startTime, personID, timeZoneOffset = (new Date()).getTimezoneOffset() * 1000, fbOpen = true;
 
   var startTime = function(tabId, changeInfo, tab) {
+    //console.log("update");
+    var currTime = Date.now();
     if (usingFB) {
-      totalTime = totalTime + Date.now() - startTime;
+      totalTime += currTime - startTime;
+
+      $.post('http://fbtimer.herokuapp.com/logsession', {
+        personID: personID,
+        sessionStart: startTime,
+        sessionEnd: currTime,
+        timeZoneOffset: timeZoneOffset
+      });
       usingFB = false;
     }
 
     if (tab.url.indexOf('facebook.com') > -1) {
       startTime = Date.now();
       usingFB = true;
+      fbOpen = true;
       chrome.tabs.sendMessage(tabId, {totalTime: totalTime});
     }
   }
 
   var checkTime = function(activeinfo, changeInfo) {
+    //console.log("activate");
+    var currTime = Date.now();
     if (usingFB) {
-      totalTime = totalTime + Date.now() - startTime;
+      totalTime += currTime - startTime;
+
+      $.post('http://fbtimer.herokuapp.com/logsession', {
+        personID: personID,
+        sessionStart: startTime,
+        sessionEnd: currTime,
+        timeZoneOffset: timeZoneOffset
+      });
       usingFB = false;
     }
 
     chrome.tabs.query({url: "*://www.facebook.com/*"}, function(tabs) {
       for (var i = 0; i < tabs.length; i++) {
+        fbOpen = true;
         if(tabs[i].id == activeinfo.tabId) {
           startTime = Date.now();
           usingFB = true;
@@ -33,10 +53,15 @@
   }
 
   var closingFB = function(tabId, removeInfo) {
-    //TODO: send the session information to the server logging the amount of time used here
+    //console.log("closing");
     chrome.tabs.query({url: "*://www.facebook.com/*"}, function(tabs) {
-      if(tabs.length == 0)
+      if(tabs.length == 0 && fbOpen) {
         totalTime = 0;
+        fbOpen = false;
+        $.post('http://fbtimer.herokuapp.com/endsession', {
+          personID: personID
+        });
+      }
     });
   }
 
@@ -53,5 +78,12 @@
   chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.sendData == "time")
       sendResponse({totalTime: totalTime});
+
+    if(request.personID)
+      personID = request.personID;
+
+    $.get('http://fbtimer.herokuapp.com/showtimer', function(response) {
+      chrome.tabs.sendMessage(sender.tab.id, response);
+    });
   });
 })(window);

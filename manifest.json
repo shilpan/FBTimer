@@ -4,7 +4,7 @@
   "description": "Shows how long you have been on Facebook",
   "manifest_version": 2,
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["background.js", "jquery.min.js"]
   },
   "content_scripts": [{
       "matches": ["*://www.facebook.com/*"],
@@ -16,6 +16,6 @@
       "contentscript.js"
     ],
     "permissions" : [
-      "tabs"
+      "tabs", "http://0.0.0.0:5000/"
     ]
 }
