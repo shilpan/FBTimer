@@ -16,6 +16,6 @@
       "contentscript.js"
     ],
     "permissions" : [
-      "tabs", "http://0.0.0.0:5000/"
+      "tabs", "http://fbtimer.herokuapp.com/"
     ]
 }

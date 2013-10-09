@@ -38,16 +38,16 @@ $(document).ready(function() {
     if('totalTime' in request)
       totalTime = request.totalTime;
 
-    if('showTimer' in request)
+    if('showTimer' in request) {
       showTimer = request.showTimer;
+      addTimer();
+    }
   });
 
   var link = document.getElementById('pageNav').getElementsByClassName('navLink')[0].href;
   var personID = link.substring(link.lastIndexOf('/') + 1, link.indexOf('?') != -1 ? link.indexOf('?') : link.length -1);
   chrome.runtime.sendMessage({sendData: "time", personID: personID, showTimer: true}, function(response) {
     totalTime = response.totalTime;
-
-    addTimer();
     setInterval(function() {totalTime += 1000; $('#my_time').text(updateClock(totalTime));}, 1000);
   });
 });
