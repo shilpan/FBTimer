@@ -1,7 +1,7 @@
 {
-  "name": "FBTimer",
+  "name": "Perspective",
   "version": "0.1.1",
-  "description": "Shows how long you have been on Facebook",
+  "description": "A study about seeing yourself from a different point of view",
   "manifest_version": 2,
   "background": {
     "scripts": ["background.js", "jquery.min.js"]
