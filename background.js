@@ -58,6 +58,18 @@
       if(tabs.length == 0 && fbOpen) {
         totalTime = 0;
         fbOpen = false;
+        if (usingFB) {
+          totalTime += currTime - startTime;
+
+          $.post('http://fbtimer.herokuapp.com/logsession', {
+            personID: personID,
+            sessionStart: startTime,
+            sessionEnd: currTime,
+            timeZoneOffset: timeZoneOffset
+          });
+          usingFB = false;
+        }
+
         $.post('http://fbtimer.herokuapp.com/endsession', {
           personID: personID
         });
