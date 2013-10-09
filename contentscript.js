@@ -18,7 +18,7 @@ $(document).ready(function() {
   var addTimer = function () {
     var fbDiv = document.getElementById('contentArea');
 
-    if(!fbDiv)
+    if(fbDiv == undefined)
       fbDiv = document.getElementById('content');
 
     if (fbDiv.firstChild.id != "my_div" && showTimer)
