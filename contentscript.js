@@ -33,7 +33,18 @@ $(document).ready(function() {
     setTimeout(addTimer, 1000);
   }, false);
 
-  console.log(showTimer);
+  var interval_id;
+  window.addEventListener('focus', function(event) {
+    console.log('focused');
+    interval_id = setInterval(function() {totalTime += 1000; $('#my_time').text(updateClock(totalTime));}, 1000);
+  }, false);
+
+  window.addEventListener('blur', function(event) {
+    console.log('hello');
+    clearInterval(interval_id);
+    interval_id = 0;
+  }, false);
+
   chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if('totalTime' in request)
       totalTime = request.totalTime;
@@ -48,6 +59,6 @@ $(document).ready(function() {
   var personID = link.substring(link.lastIndexOf('/') + 1, link.indexOf('?') != -1 ? link.indexOf('?') : link.length -1);
   chrome.runtime.sendMessage({sendData: "time", personID: personID, showTimer: true}, function(response) {
     totalTime = response.totalTime;
-    setInterval(function() {totalTime += 1000; $('#my_time').text(updateClock(totalTime));}, 1000);
+    interval_id = setInterval(function() {totalTime += 1000; $('#my_time').text(updateClock(totalTime));}, 1000);
   });
 });
