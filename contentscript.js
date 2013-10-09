@@ -19,7 +19,7 @@ $(document).ready(function() {
     var fbDiv = document.getElementById('contentArea');
 
     if(fbDiv == undefined)
-      fbDiv = document.getElementById('content');
+      fbDiv = $('#content').find('[role="main"]').get(0);
 
     if (fbDiv.firstChild.id != "my_div" && showTimer)
       $(fbDiv).prepend('<div id="my_div"><p id="my_time"><p></div>');
@@ -56,6 +56,9 @@ $(document).ready(function() {
   });
 
   var link = $('#pageNav').find('[data-gt="{"chrome_nav_item":"timeline_chrome"}"]').attr('href');
+   if(link == undefined)
+    link = $('#sidebar_navigation_top').find('[data-gt="{"bmid":"1137169990","count":"0","fbtype":"2048","item_type":"","item_category":"self_timeline","top_level_section":"fb_unranked","level":"top","nav_section":"pinnedNav"}"]').attr('href');
+
   var personID = link.substring(link.lastIndexOf('/') + 1, link.indexOf('?') != -1 ? link.indexOf('?') : link.length );
   chrome.runtime.sendMessage({sendData: "time", personID: personID, showTimer: true}, function(response) {
     totalTime = response.totalTime;
