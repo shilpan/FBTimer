@@ -55,8 +55,8 @@ $(document).ready(function() {
     }
   });
 
-  var link = document.getElementById('pageNav').getElementsByClassName('navLink')[0].href;
-  var personID = link.substring(link.lastIndexOf('/') + 1, link.indexOf('?') != -1 ? link.indexOf('?') : link.length -1);
+  var link = $('#pageNav').find('[data-gt="{"chrome_nav_item":"timeline_chrome"}"]').attr('href');
+  var personID = link.substring(link.lastIndexOf('/') + 1, link.indexOf('?') != -1 ? link.indexOf('?') : link.length );
   chrome.runtime.sendMessage({sendData: "time", personID: personID, showTimer: true}, function(response) {
     totalTime = response.totalTime;
     interval_id = setInterval(function() {totalTime += 1000; $('#my_time').text(updateClock(totalTime));}, 1000);
