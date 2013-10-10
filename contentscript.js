@@ -40,7 +40,6 @@ $(document).ready(function() {
   }, false);
 
   window.addEventListener('blur', function(event) {
-    console.log('hello');
     clearInterval(interval_id);
     interval_id = 0;
   }, false);

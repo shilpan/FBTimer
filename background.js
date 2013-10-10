@@ -1,14 +1,13 @@
 (function (window, undefined) {
-  var usingFB = false, totalTime = 0, startTime, personID, timeZoneOffset = (new Date()).getTimezoneOffset() * 1000, fbOpen = true;
+  var usingFB = false, totalTime = 0, startTime, personID, timeZoneOffset = (new Date()).getTimezoneOffset() * 1000, fbOpen = true, prevPersonID;
 
   var startTime = function(tabId, changeInfo, tab) {
-    //console.log("update");
     var currTime = Date.now();
     if (usingFB) {
       totalTime += currTime - startTime;
 
       $.post('http://fbtimer.herokuapp.com/logsession', {
-        personID: personID,
+        personID: prevPersonID,
         sessionStart: startTime,
         sessionEnd: currTime,
         timeZoneOffset: timeZoneOffset
@@ -20,18 +19,23 @@
       startTime = Date.now();
       usingFB = true;
       fbOpen = true;
+
+      if (prevPersonID != personID) {
+        totalTime = 0;
+        personID = prevPersonID;
+      }
+
       chrome.tabs.sendMessage(tabId, {totalTime: totalTime});
     }
   }
 
   var checkTime = function(activeinfo, changeInfo) {
-    //console.log("activate");
     var currTime = Date.now();
     if (usingFB) {
       totalTime += currTime - startTime;
 
       $.post('http://fbtimer.herokuapp.com/logsession', {
-        personID: personID,
+        personID: prevPersonID,
         sessionStart: startTime,
         sessionEnd: currTime,
         timeZoneOffset: timeZoneOffset
@@ -41,10 +45,16 @@
 
     chrome.tabs.query({url: "*://www.facebook.com/*"}, function(tabs) {
       for (var i = 0; i < tabs.length; i++) {
-        fbOpen = true;
         if(tabs[i].id == activeinfo.tabId) {
           startTime = Date.now();
           usingFB = true;
+          fbOpen = true;
+
+          if (prevPersonID != personID) {
+            totalTime = 0;
+            personID = prevPersonID;
+          }
+
           chrome.tabs.sendMessage(tabs[i].id, {totalTime: totalTime});
           return;
         }
@@ -53,7 +63,6 @@
   }
 
   var closingFB = function(tabId, removeInfo) {
-    //console.log("closing");
     chrome.tabs.query({url: "*://www.facebook.com/*"}, function(tabs) {
       if(tabs.length == 0 && fbOpen) {
         totalTime = 0;
