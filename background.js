@@ -22,7 +22,7 @@
 
       if (prevPersonID != personID) {
         totalTime = 0;
-        personID = prevPersonID;
+        prevPersonID = personID;
       }
 
       chrome.tabs.sendMessage(tabId, {totalTime: totalTime});
@@ -52,7 +52,7 @@
 
           if (prevPersonID != personID) {
             totalTime = 0;
-            personID = prevPersonID;
+            prevPersonID = personID;
           }
 
           chrome.tabs.sendMessage(tabs[i].id, {totalTime: totalTime});
