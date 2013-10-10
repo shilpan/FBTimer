@@ -71,7 +71,7 @@
           totalTime += currTime - startTime;
 
           $.post('http://fbtimer.herokuapp.com/logsession', {
-            personID: personID,
+            personID: prevPersonID,
             sessionStart: startTime,
             sessionEnd: currTime,
             timeZoneOffset: timeZoneOffset

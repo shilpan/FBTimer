@@ -56,7 +56,7 @@ $(document).ready(function() {
 
   var link = $('#pageNav').find('[data-gt="{"chrome_nav_item":"timeline_chrome"}"]').attr('href');
    if(link == undefined)
-    link = $('#sidebar_navigation_top').find('[data-gt="{"bmid":"1137169990","count":"0","fbtype":"2048","item_type":"","item_category":"self_timeline","top_level_section":"fb_unranked","level":"top","nav_section":"pinnedNav"}"]').attr('href');
+    link = $('#sidebar_navigation_top').find('._4g5p', '._521g').attr('href');
 
   var personID = link.substring(link.lastIndexOf('/') + 1, link.indexOf('?') != -1 ? link.indexOf('?') : link.length );
   chrome.runtime.sendMessage({sendData: "time", personID: personID, showTimer: true}, function(response) {
